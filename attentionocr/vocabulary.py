@@ -3,7 +3,8 @@ import string
 import numpy as np
 
 
-default_vocabulary = list(string.ascii_lowercase) + list(string.digits) + [' ', '-', '.', ':', '?', '!', '<', '>', '#', '@', '(', ')', '$', '%', '&']
+# default_vocabulary = list(string.ascii_lowercase) + list(string.digits) + [' ', '-', '.', ':', '?', '!', '<', '>', '#', '@', '(', ')', '$', '%', '&']
+default_vocabulary = list(string.ascii_uppercase) + list(string.digits) + [' ', '-', '.', '#']
 
 
 class Vocabulary:

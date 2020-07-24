@@ -22,4 +22,6 @@ dataset
 /*.tgz
 /sample.txt
 *.pyc
-.vscode
+.vscode/
+huong_dan.txt 
+*.tflite

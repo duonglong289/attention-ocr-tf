@@ -14,11 +14,11 @@ from attentionocr import metrics, Vocabulary, Encoder, Attention, Decoder, Decod
 
 class AttentionOCR:
 
-    def __init__(self, vocabulary: Vocabulary, max_txt_length: int = 42, optimizer=tf.keras.optimizers.Adam(), units: int = 256):
+    def __init__(self, vocabulary: Vocabulary, image_height: int=32, image_width: int=320, max_txt_length: int=20, optimizer=tf.keras.optimizers.Adam(), units: int=256):
         self._vocabulary = vocabulary
         self._max_txt_length = max_txt_length
-        self._image_height = 32
-        self._image_width = 320
+        self._image_height = image_height
+        self._image_width = image_width
         self._units = units
 
         self.optimizer = optimizer
@@ -40,6 +40,7 @@ class AttentionOCR:
         self._training_model = self.build_training_model()
         self._inference_model = self.build_inference_model()
         self._visualisation_model = self.build_inference_model(include_attention=True)
+
 
     def build_training_model(self) -> tf.keras.Model:
         encoder_output = self._encoder(self._encoder_input)
@@ -93,7 +94,7 @@ class AttentionOCR:
                         accuracies.append(accuracy)
                     self.stats["test accuracy"] = np.mean(accuracies)
                 pbar.set_postfix(self.stats)
-            self.save('snapshots/snapshot-%d.h5' % epoch)
+            self.save_weights('snapshots/snapshot-%d.h5' % epoch)
 
     def _training_step(self, x_image: np.ndarray, x_decoder: np.ndarray, y_true: np.ndarray) -> float:
         if x_decoder.shape[1] == 1:
@@ -129,11 +130,12 @@ class AttentionOCR:
             for name in kwargs:
                 tf.summary.scalar(name, kwargs[name], step=self.optimizer.iterations)
 
-    def save(self, filepath) -> None:
+    def save_weights(self, filepath) -> None:
         self._training_model.save_weights(filepath=filepath)
 
-    def load(self, filepath) -> None:
+    def load_weights(self, filepath) -> None:
         self._training_model.load_weights(filepath=filepath)
+
 
     def predict(self, images) -> List[str]:
         K.set_learning_phase(0)
@@ -170,3 +172,12 @@ class AttentionOCR:
                     heatmap[:, int(location * step_size) : int((location + 1) * step_size)] = strength * 255.0
                 filtered_image = (image + 1.0) * 127.5 * 0.4 + heatmap * 0.6
                 cv2.imwrite('out/%s-%d-%s.png' % (text, index, text[index]), filtered_image)
+
+    def save_model(self, dirpath):
+        model = self.build_inference_model()
+        tf.saved_model.save(model, dirpath)
+
+
+    def load_model(self, dirpath):
+        model = tf.saved_model.load(dirpath)
+        return model

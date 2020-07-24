@@ -23,6 +23,4 @@ if __name__ == "__main__":
     vec = Vectorizer(vocabulary=voc, image_width=args.image_width, max_txt_length=args.max_txt_length)
     model = AttentionOCR(vocabulary=voc, max_txt_length=args.max_txt_length)
 
-    model.load("trained.h5")
-    import ipdb; ipdb.set_trace()
-    # print(model)
+    
