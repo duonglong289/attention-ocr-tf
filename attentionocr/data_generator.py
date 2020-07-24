@@ -112,7 +112,7 @@ def synthetic_data_generator(vectorizer: Vectorizer, epoch_size: int = 1000, aug
     return synthesize
 
 
-def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, epoch_size: int = 1000, augment: bool = False, is_training: bool = False):
+def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = False, is_training: bool = False):
     import os 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)

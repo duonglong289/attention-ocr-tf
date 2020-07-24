@@ -22,9 +22,9 @@ if __name__ == "__main__":
     model = AttentionOCR(vocabulary=voc, max_txt_length=args.max_txt_length)
 
 
-    if not args.data_directory:
-        train_data = load_data_onmt("train",vec, epoch_size=args.epoch_size, augment=False, is_training=True)
-        validation_data = load_data_onmt("val",vec, epoch_size=args.epoch_size, augment=False)
+    # if not args.data_directory:
+    train_data = load_data_onmt(args.data_directory, "train",vec, augment=False, is_training=True)
+    validation_data = load_data_onmt(args.data_directory, "val",vec, augment=False)
   
     # import ipdb; ipdb.set_trace()
     # for data in train_data:

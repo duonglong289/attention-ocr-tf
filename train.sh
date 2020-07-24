@@ -5,4 +5,5 @@ python train.py \
     --batch_size 128 \
     --validate_every_step 10 \
     --model_name last_model.h5 \
-    --pretrained_model snapshots/snapshot-2.h5
+    --data_directory dataset
+    # --pretrained_model snapshots/snapshot-2.h5
