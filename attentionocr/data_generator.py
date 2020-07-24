@@ -112,9 +112,7 @@ def synthetic_data_generator(vectorizer: Vectorizer, epoch_size: int = 1000, aug
     return synthesize
 
 
-
-
-def load_data_onmt(phase, vectorizer: Vectorizer, epoch_size: int = 1000, augment: bool = False, is_training: bool = False):
+def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, epoch_size: int = 1000, augment: bool = False, is_training: bool = False):
     import os 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)
@@ -123,18 +121,18 @@ def load_data_onmt(phase, vectorizer: Vectorizer, epoch_size: int = 1000, augmen
     
     def synthesize():
         if phase == "train":
-            with open('./dataset/src-train.txt', 'r') as f:
+            with open(os.path.join(data_dir, 'src-train.txt'), 'r') as f:
                 images = f.readlines()
-            with open('./dataset/tgt-train.txt', 'r') as f:
+            with open(os.path.join(data_dir, 'tgt-train.txt'), 'r') as f:
                 labels = f.readlines()
         else:
-            with open('./dataset/src-val.txt', 'r') as f:
+            with open(os.path.join(data_dir, 'src-val.txt'), 'r') as f:
                 images = f.readlines()
-            with open('./dataset/tgt-val.txt', 'r') as f:
+            with open(os.path.join(data_dir, 'tgt-val.txt'), 'r') as f:
                 labels = f.readlines()
 
         for i, path_img in enumerate(images):
-            image_path = os.path.join("./dataset/images", path_img.strip())
+            image_path = os.path.join(data_dir, "images", path_img.strip())
             image = cv2.imread(image_path)
             if augment:
                 image = seq.augment_image(image)
