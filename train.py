@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser.add_argument('--image_width', type=int, default=320, required=False)
     parser.add_argument('--max_txt_length', type=int, default=20, required=False)
     parser.add_argument('--batch_size', type=int, default=128, required=False)
-    parser.add_argument('--validate_every_steps', type=int, default=10, required=False)
+    parser.add_argument('--validate_every_steps', type=int, default=20, required=False)
     parser.add_argument('--data_directory', type=str, default="dataset", required=False)
     parser.add_argument('--pretrained_model', type=str, default=None, required=False)
     parser.add_argument('--model_name', type=str, default='trained.h5', required=False)
