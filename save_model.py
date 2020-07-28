@@ -11,7 +11,7 @@ import os
 IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 32
 BATCH_SIZE = 1
-CHANNEL = 1
+CHANNEL = 3
 MAX_LENGTH = 20
 
 class AttentionOCRModule(tf.Module):

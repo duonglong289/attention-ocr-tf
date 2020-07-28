@@ -29,8 +29,8 @@ class AttentionOCR:
         self.tensorboard_writer = tf.summary.create_file_writer(logdir=log_dir)
 
         # Build the model.
-        self._encoder_input = Input(shape=(self._image_height, self._image_width, 3), name="encoder_input")
-        self._decoder_input = Input(shape=(None, len(self._vocabulary)), name="decoder_input")
+        self._encoder_input = Input(shape=(self._image_height, self._image_width, 3), dtype=tf.float32, name="encoder_input")
+        self._decoder_input = Input(shape=(None, len(self._vocabulary)), dtype=tf.float32, name="decoder_input")
 
         self._encoder = Encoder(self._units)
         self._attention = Attention(self._units)
