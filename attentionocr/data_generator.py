@@ -16,7 +16,7 @@ from .vocabulary import default_vocabulary
 
 import cv2
 import os
-import sys 
+import sys
 sys.path.append(".")
 
 image_util = ImageUtil(32, 320)
@@ -93,7 +93,7 @@ def generate_image(text: str, augment: bool) -> Tuple[np.array, str]:
     image.paste(mask, (0, 0), mask)
 
     image = np.array(image)
-    
+
     if augment:
         image = seq.augment_image(image)
     image = image_util.preprocess(image)
@@ -113,12 +113,12 @@ def synthetic_data_generator(vectorizer: Vectorizer, epoch_size: int = 1000, aug
 
 
 def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = False, is_training: bool = False):
-    import os 
+    import os
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)
 
     # def synthesize(phase):
-    
+
     def synthesize():
         if phase == "train":
             with open(os.path.join(data_dir, 'src-train.txt'), 'r') as f:
@@ -136,7 +136,7 @@ def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = Fals
             image = cv2.imread(image_path)
             if augment:
                 image = seq.augment_image(image)
-            
+
             try:
                 image = image_util.preprocess(image)
             except:
@@ -146,22 +146,25 @@ def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = Fals
             label = label.split(" ")
             text = ""
             for char in label:
-                if char == "\;":
-                    char == " "
+                if char == "\\;":
+                    char = " "
                 text += char
-
+            # print(text)
             decoder_input, decoder_output = vectorizer.transform_text(text, is_training)
-            
+
             yield image, decoder_input, decoder_output
 
     return synthesize
 
 
 if __name__=="__main__":
-    import cv2
-    text = "010498328943892"
-    image, sentenc = generate_image(text, augment=False)
-    image = image.squeeze()
-    print(image.shape)
-    cv2.imshow("", image)
-    cv2.waitKey(0)
+    # import cv2
+    # text = "010498328943892"
+    # image, sentenc = generate_image(text, augment=False)
+    # image = image.squeeze()
+    # print(image.shape)
+    # cv2.imshow("", image)
+    # cv2.waitKey(0)
+    data = open("dataset/tgt-train.txt","r").readlines()
+    label = data[0].strip().split(" ")
+    print(label)
