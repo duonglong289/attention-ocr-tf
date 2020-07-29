@@ -12,7 +12,7 @@ from .vectorizer import Vectorizer
 from .vocabulary import default_vocabulary
 # from image import ImageUtil
 # from vectorizer import Vectorizer
-# from vocabulary import default_vocabulary
+# from vocabulary import default_vocabulary, Vocabulary
 
 import cv2
 import os
@@ -158,13 +158,12 @@ def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = Fals
 
 
 if __name__=="__main__":
-    # import cv2
-    # text = "010498328943892"
-    # image, sentenc = generate_image(text, augment=False)
-    # image = image.squeeze()
-    # print(image.shape)
-    # cv2.imshow("", image)
-    # cv2.waitKey(0)
-    data = open("dataset/tgt-train.txt","r").readlines()
-    label = data[0].strip().split(" ")
-    print(label)
+    voc = Vocabulary()
+    vec = Vectorizer(vocabulary=voc, image_width=320, max_txt_length=20)
+    train_set = load_data_onmt("dataset", "train",vec, augment=False, is_training=True)
+    subset = train_set()
+    for i, (img, _, _) in enumerate(subset):
+        print(np.max(img))
+        # if i == 10:
+        break
+    # import ipdb; ipdb.set_trace()    
