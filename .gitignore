@@ -11,7 +11,11 @@ synthetic/fonts/
 synthetic/texts/
 synthetic/images/
 out
+
+# dataset
 dataset
+data_test_idcard
+
 /scripts/test
 /scripts/train
 /scripts/fonts
@@ -24,4 +28,7 @@ dataset
 *.pyc
 .vscode/
 huong_dan.txt 
+
+# model
+pb_model
 *.tflite

@@ -145,7 +145,7 @@ class AttentionOCR:
 
             decoder_input = np.zeros((1, 1, len(self._vocabulary)))
             decoder_input[0, :, :] = self._vocabulary.one_hot_encode('', 1, sos=True, eos=False)
-
+            
             y_pred = self._inference_model.predict([image, decoder_input])
             y_pred = np.squeeze(y_pred, axis=0)  # squeeze the batch index out
             texts.append(self._vocabulary.one_hot_decode(y_pred, self._max_txt_length))
@@ -155,7 +155,6 @@ class AttentionOCR:
         K.set_learning_phase(0)
         for image in images:
             input_image = np.expand_dims(image, axis=0)
-
             decoder_input = np.zeros((1, 1, len(self._vocabulary)))
             decoder_input[0, :, :] = self._vocabulary.one_hot_encode('', 1, sos=True, eos=False)
 

@@ -16,8 +16,7 @@ class ImageUtil:
 
     def preprocess(self, image):
         image = self._scale_axis(image)
-        image = self._grayscale(image)
-        print(np.max(image))
+        image = self._normalize(image)
         image = self._pad(image)
         return image
 
@@ -38,11 +37,9 @@ class ImageUtil:
         return image
 
     @staticmethod
-    def _grayscale(image: np.ndarray) -> np.ndarray:
+    def _normalize(image: np.ndarray) -> np.ndarray:
         # image = (cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) / 127.5) - 1.0
         image = (cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 127.5) - 1.0
-        print(np.max(image))
-        print("Nhay vao day chua ??")
         return image
 
     def _pad(self, image: np.ndarray) -> np.ndarray:
@@ -53,6 +50,5 @@ class ImageUtil:
             color = (0,0,0)
             img_bg = np.full((self._image_height, self._image_width, cc), color, dtype=np.float32)
             img_bg[0:hh, 0:ww, :] = image
-            plt.imshow(img_bg)
-            plt.show()
-        return img_bg
+            return img_bg
+        return image

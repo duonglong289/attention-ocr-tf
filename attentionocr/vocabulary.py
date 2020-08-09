@@ -56,6 +56,6 @@ if __name__ == "__main__":
     voc = Vocabulary()
     # import ipdb; ipdb.set_trace()
     # a = voc.one_hot_encode("", 1, sos=True, eos=False)
-    print(len(voc._character_reverse_index))
-    print(voc._character_reverse_index)
+    # print(len(voc._character_reverse_index))
+    # print(voc._character_reverse_index)
  

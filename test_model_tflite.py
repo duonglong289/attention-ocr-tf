@@ -13,7 +13,11 @@ input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
 input_shape = input_details[0]['shape']
-input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
+img = cv2.imread("/media/geneous/01D62877FB2A4900/Techainer/OCR/test_model/attention-ocr-tf/data_test_idcard/MicrosoftTeams-image.png")
+input_data = image_util.preprocess(img)
+input_data = np.expand_dims(input_data, axis=0).astype(np.float32)
+print(input_data.shape)
+# input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
 print(input_shape)
 
 # Cac kí tự đặc biệt
@@ -55,6 +59,7 @@ interpreter.invoke()
 # # The function `get_tensor()` returns a copy of the tensor data.
 # # Use `tensor()` in order to get a pointer to the tensor.
 output_data = interpreter.get_tensor(output_details[0]['index'])
-print("output_data", output_data)
+# print("output_data", output_data)
 y_pred = np.squeeze(output_data, axis=0)  # squeeze the batch index out
 text = one_hot_decode(y_pred, 20)
+print(text)

@@ -20,7 +20,10 @@ class AttentionOCRModule(tf.Module):
     
     @tf.function(input_signature=[tf.TensorSpec(shape=(BATCH_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH, CHANNEL), dtype=tf.float32)])
     def input_img(self, input_img):
-        decoder_spec = tf.zeros([BATCH_SIZE, 1, len_vocab], dtype=tf.float32)
+        # decoder_spec = tf.zeros([BATCH_SIZE, 1, len_vocab], dtype=tf.float32)
+        decoder_spec = np.zeros((BATCH_SIZE, 1, len_vocab), dtype=np.float32)
+        decoder_spec[0][0][1] = 1.0
+        decoder_spec = tf.convert_to_tensor(decoder_spec)
         results = self.model([input_img, decoder_spec])
         return results
 
@@ -31,7 +34,6 @@ if __name__ == "__main__":
     parser.add_argument('--image_width', type=int, default=320, required=False)
     parser.add_argument('--image_height', type=int, default=32, required=False)
     parser.add_argument('--max_txt_length', type=int, default=20, required=False)
-    # parser.add_argument('--batch_size', type=int, default=1, required=False)
     parser.add_argument('--pretrained_model', type=str, default=None, required=False)
     parser.add_argument('--model_pb_dir', type=str, default='pb_model', required=False)
     parser.add_argument('--model_tflite_path', type=str, default='saved_model.tflite', required=False)
