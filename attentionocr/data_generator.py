@@ -149,6 +149,7 @@ def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = Fals
                 if char == "\\;":
                     char = " "
                 text += char
+            print(text)
             decoder_input, decoder_output = vectorizer.transform_text(text, is_training)
 
             yield image, decoder_input, decoder_output
@@ -157,14 +158,21 @@ def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = Fals
 
 
 if __name__=="__main__":
+    import tensorflow as tf
     voc = Vocabulary()
     vec = Vectorizer(vocabulary=voc, image_width=320, max_txt_length=20)
     train_set = load_data_onmt("dataset", "val",vec, augment=False, is_training=True)
     subset = train_set()
-    for i, (img, _, _, text) in enumerate(subset):
-        plt.imshow(img)
-        plt.show()
-        
-        # if i == 10:
+    for i, (img, decode_in, decode_out, text ) in enumerate(subset):
+        indices = tf.argmax(decode_out,axis=1)
+        indices = indices.numpy()
+
+        print(indices)
+        print(text)
         # break
+        # plt.imshow(img)
+        # plt.show()
+        
+        if i == 10:
+            break
     # import ipdb; ipdb.set_trace()    
