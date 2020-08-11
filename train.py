@@ -7,7 +7,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--epochs', type=int, default=1, required=False)
-    parser.add_argument('--image_height', type=int, default=64, required=False)
     parser.add_argument('--image_width', type=int, default=448, required=False)
     parser.add_argument('--max_txt_length', type=int, default=20, required=False)
     parser.add_argument('--batch_size', type=int, default=1, required=False)
@@ -17,14 +16,16 @@ if __name__ == "__main__":
     parser.add_argument('--model_name', type=str, default='trained.h5', required=False)
 
     args = parser.parse_args()
+    
+    IMAGE_HEIGHT = 32
 
     voc = Vocabulary()
-    vec = Vectorizer(vocabulary=voc, image_height=args.image_height ,image_width=args.image_width, max_txt_length=args.max_txt_length)
-    model = AttentionOCR(vocabulary=voc, max_txt_length=args.max_txt_length)
+    vec = Vectorizer(vocabulary=voc, image_height=IMAGE_HEIGHT ,image_width=args.image_width, max_txt_length=args.max_txt_length)
+    model = AttentionOCR(vocabulary=voc, image_height=IMAGE_HEIGHT ,image_width=args.image_width, max_txt_length=args.max_txt_length)
     
     # Load data
-    train_data = load_data_onmt(args.data_directory, "train", vec, augment=True, is_training=True)
-    validation_data = load_data_onmt(args.data_directory, "val", vec, augment=False)
+    train_data = load_data_onmt(args.data_directory,"train", vec, image_width=224, augment=True, is_training=True)
+    validation_data = load_data_onmt(args.data_directory, "val", vec, augment=False, is_training=False)
 
     train_gen = tf.data.Dataset.from_generator(train_data, output_types=(tf.float32, tf.float32, tf.float32))
     validation_gen = tf.data.Dataset.from_generator(validation_data, output_types=(tf.float32, tf.float32, tf.float32))

@@ -13,7 +13,7 @@ from .vocabulary import Vocabulary
 
 class Vectorizer:
 
-    def __init__(self, vocabulary: Vocabulary, image_height=32, image_width=320, max_txt_length: int = 42, transform: str = "lowercase"):
+    def __init__(self, vocabulary: Vocabulary, image_height=32, image_width=224, max_txt_length: int = 20, transform: str = "lowercase"):
         self._vocabulary = vocabulary
         self._max_txt_length = max_txt_length
         self._image_height = image_height

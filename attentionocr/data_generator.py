@@ -19,7 +19,7 @@ import os
 import sys
 sys.path.append(".")
 
-image_util = ImageUtil(32, 320)
+
 
 
 # seq = iaa.SomeOf((0, 2), [
@@ -41,8 +41,8 @@ seq = iaa.Sequential([
         [
             iaa.Multiply((0.5, 1.5)),
             iaa.MotionBlur(k=(3, 7)),
-            iaa.GaussianBlur((0, 1.5)),
-            iaa.MedianBlur(k=(1, 3)),
+            iaa.GaussianBlur((1, 3)),
+            iaa.MedianBlur(k=(1, 5)),
             iaa.AverageBlur(k=(2, 4)),
             iaa.BilateralBlur(d=(1, 3), sigma_color=250, sigma_space=250)
         ]
@@ -55,19 +55,19 @@ seq = iaa.Sequential([
             iaa.AddToHueAndSaturation((-20, 20))
         ]
     )),
-    iaa.Sometimes(0.25, iaa.OneOf([
+    iaa.Sometimes(0.5, iaa.OneOf([
         iaa.OneOf(
             [
                 iaa.Affine(
                     scale=(0.9, 1.05),
-                    rotate=(-4, 4),
+                    rotate=(-5, 5),
                     translate_percent=(-0.05, 0.05),
                     cval=255,
                     mode='constant',
                     fit_output=True),
                 iaa.Affine(
                     scale=(0.9, 1.05),
-                    shear=(-4, 4),
+                    shear=(-5, 5),
                     translate_percent=(-0.05, 0.05),
                     cval=255,
                     mode='constant',
@@ -77,8 +77,8 @@ seq = iaa.Sequential([
         iaa.OneOf(
             [
                 iaa.ElasticTransformation(alpha=(0.2, 1.3),
-                                        sigma=0.2),
-                iaa.PiecewiseAffine(scale=(0.001, 0.006)),
+                                        sigma=0.4),
+                iaa.PiecewiseAffine(scale=(0.001, 0.009)),
                 iaa.PerspectiveTransform(scale=(0, 0.02), keep_size=False),
             ])
         ]
@@ -170,12 +170,8 @@ def synthetic_data_generator(vectorizer: Vectorizer, epoch_size: int = 1000, aug
     return synthesize
 
 
-def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = False, is_training: bool = False):
-    import os
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    print(dir_path)
-
-    # def synthesize(phase):
+def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, image_width=224, image_height=32, augment: bool = False, is_training: bool = False):
+    image_util = ImageUtil(image_height=image_height, image_width=image_width)
 
     def synthesize():
         if phase == "train":
@@ -232,4 +228,3 @@ if __name__=="__main__":
         
         if i == 10:
             break
-    # import ipdb; ipdb.set_trace()    
