@@ -25,7 +25,7 @@ if __name__ == "__main__":
     
     # Load data
     train_data = load_data_onmt(args.data_directory,"train", vec, image_width=224, augment=True, is_training=True)
-    validation_data = load_data_onmt(args.data_directory, "val", vec, augment=False, is_training=False)
+    validation_data = load_data_onmt(args.data_directory, "val", vec, augment=True, is_training=False)
 
     train_gen = tf.data.Dataset.from_generator(train_data, output_types=(tf.float32, tf.float32, tf.float32))
     validation_gen = tf.data.Dataset.from_generator(validation_data, output_types=(tf.float32, tf.float32, tf.float32))

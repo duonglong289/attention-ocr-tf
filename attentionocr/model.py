@@ -14,7 +14,7 @@ from attentionocr import metrics, Vocabulary, Encoder, Attention, Decoder, Decod
 
 class AttentionOCR:
 
-    def __init__(self, vocabulary: Vocabulary, image_height: int=32, image_width: int=320, max_txt_length: int=20, optimizer=tf.keras.optimizers.Adam(), units: int=256):
+    def __init__(self, vocabulary: Vocabulary, image_height: int=32, image_width: int=320, max_txt_length: int=20, optimizer=tf.keras.optimizers.Adam(), units: int=128):
         self._vocabulary = vocabulary
         self._max_txt_length = max_txt_length
         self._image_height = image_height
@@ -89,10 +89,14 @@ class AttentionOCR:
                 self.stats["iterations"] = self.optimizer.iterations.numpy()
                 if self.optimizer.iterations % validate_every_steps == 0 and validation_data is not None:
                     accuracies = []
+                    val_losses = []
                     for validation_batch in validation_data.batch(batch_size):
-                        accuracy = self._validation_step(*validation_batch)
+                        accuracy, val_loss = self._validation_step(*validation_batch)
                         accuracies.append(accuracy)
+                        val_losses.append(val_loss)
                     self.stats["test accuracy"] = np.mean(accuracies)
+                    self.stats["val_loss"] = np.mean(val_losses)
+
                 pbar.set_postfix(self.stats)
             self.save_weights('snapshots/snapshot-%d.h5' % epoch)
 
@@ -116,9 +120,10 @@ class AttentionOCR:
         # determine the test accuracy using the inference model
         y_pred = self._inference_model([x_image, x_decoder])
         accuracy = metrics.masked_accuracy(y_true, y_pred)
+        val_loss = self._calculate_loss(y_true, y_pred)
         # Update the tensorboards
         self._update_tensorboard(accuracy=accuracy)
-        return accuracy
+        return accuracy, val_loss
 
     @staticmethod
     def _calculate_loss(y_true, y_pred) -> tf.Tensor:
