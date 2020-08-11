@@ -22,12 +22,70 @@ sys.path.append(".")
 image_util = ImageUtil(32, 320)
 
 
-seq = iaa.SomeOf((0, 2), [
-    iaa.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)),
-    iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)),
-    iaa.Invert(1.0),
-    iaa.MotionBlur(k=10)
+# seq = iaa.SomeOf((0, 2), [
+#     iaa.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)),
+#     iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)),
+#     iaa.Invert(1.0),
+#     iaa.MotionBlur(k=10)
+# ])
+
+seq = iaa.Sequential([
+    iaa.Sometimes(0.2, iaa.OneOf(
+        [
+            iaa.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)),
+            iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)),  # emboss images
+        ]
+    )),
+
+    iaa.Sometimes(0.5, iaa.OneOf(
+        [
+            iaa.Multiply((0.5, 1.5)),
+            iaa.MotionBlur(k=(3, 7)),
+            iaa.GaussianBlur((0, 1.5)),
+            iaa.MedianBlur(k=(1, 3)),
+            iaa.AverageBlur(k=(2, 4)),
+            iaa.BilateralBlur(d=(1, 3), sigma_color=250, sigma_space=250)
+        ]
+    )),
+    iaa.Sometimes(0.3, iaa.SomeOf(2,
+        [
+            iaa.Add((-20, 20), per_channel=0.5),
+            iaa.LinearContrast((0.5, 1.5)),
+            iaa.GammaContrast(gamma=(0.45, 1.15)),
+            iaa.AddToHueAndSaturation((-20, 20))
+        ]
+    )),
+    iaa.Sometimes(0.25, iaa.OneOf([
+        iaa.OneOf(
+            [
+                iaa.Affine(
+                    scale=(0.9, 1.05),
+                    rotate=(-4, 4),
+                    translate_percent=(-0.05, 0.05),
+                    cval=255,
+                    mode='constant',
+                    fit_output=True),
+                iaa.Affine(
+                    scale=(0.9, 1.05),
+                    shear=(-4, 4),
+                    translate_percent=(-0.05, 0.05),
+                    cval=255,
+                    mode='constant',
+                    fit_output=True)
+            ]
+        ),
+        iaa.OneOf(
+            [
+                iaa.ElasticTransformation(alpha=(0.2, 1.3),
+                                        sigma=0.2),
+                iaa.PiecewiseAffine(scale=(0.001, 0.006)),
+                iaa.PerspectiveTransform(scale=(0, 0.02), keep_size=False),
+            ])
+        ]
+    )),
+    iaa.Sometimes(0.1, iaa.Grayscale()),
 ])
+
 
 
 def random_font():
@@ -149,7 +207,6 @@ def load_data_onmt(data_dir, phase, vectorizer: Vectorizer, augment: bool = Fals
                 if char == "\\;":
                     char = " "
                 text += char
-            print(text)
             decoder_input, decoder_output = vectorizer.transform_text(text, is_training)
 
             yield image, decoder_input, decoder_output

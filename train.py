@@ -23,7 +23,7 @@ if __name__ == "__main__":
     model = AttentionOCR(vocabulary=voc, max_txt_length=args.max_txt_length)
     
     # Load data
-    train_data = load_data_onmt(args.data_directory, "train", vec, augment=False, is_training=True)
+    train_data = load_data_onmt(args.data_directory, "train", vec, augment=True, is_training=True)
     validation_data = load_data_onmt(args.data_directory, "val", vec, augment=False)
 
     train_gen = tf.data.Dataset.from_generator(train_data, output_types=(tf.float32, tf.float32, tf.float32))
